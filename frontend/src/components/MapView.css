@@ -1,0 +1,18 @@
+.map-view {
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.map-view__container {
+  height: 380px;
+  width: 100%;
+  background: var(--bg-alt);
+}
+
+/* Leaflet ships its own rounded/shadowed control styling; strip it down
+   to match the flat, undecorated aesthetic of the rest of the page. */
+.map-view .leaflet-control-zoom a {
+  border-radius: 0 !important;
+}

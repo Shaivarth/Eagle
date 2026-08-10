@@ -1,0 +1,66 @@
+.app {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 16px 16px 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.app__content {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app__header {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.app__title {
+  font-family: "Orbitron", "Space Grotesk", sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  margin: 0 0 12px 0;
+  text-align: center;
+  color: var(--fg);
+}
+
+.app__description {
+  margin: 0 auto;
+  max-width: 600px;
+  color: var(--fg-dim);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.app__section {
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.app__status {
+  margin: 0;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+.app__status--error {
+  color: var(--error);
+}

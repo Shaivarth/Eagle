@@ -1,0 +1,21 @@
+.eagle-jet-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+.eagle-jet-ascii {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "Courier New", monospace;
+  font-size: clamp(7px, 1.1vw, 11px);
+  line-height: 1.15;
+  color: var(--fg-dim);
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  white-space: pre;
+}

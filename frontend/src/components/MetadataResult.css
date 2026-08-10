@@ -1,0 +1,192 @@
+.metadata-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.metadata-section {
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  padding: 20px;
+  text-align: center;
+}
+
+.metadata-section__header {
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.metadata-list {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 8px 16px;
+  margin: 0 auto;
+  padding: 0;
+  align-items: baseline;
+  max-width: 480px;
+  width: 100%;
+}
+
+@media (max-width: 540px) {
+  .metadata-list {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .metadata-list dt,
+  .metadata-list dd {
+    text-align: center !important;
+  }
+}
+
+.metadata-list dt {
+  color: var(--fg-dim);
+  margin: 0;
+  font-weight: normal;
+  text-transform: lowercase;
+  word-break: break-word;
+  text-align: right;
+}
+
+.metadata-list dd {
+  color: var(--fg);
+  margin: 0;
+  word-break: break-all;
+  text-align: left;
+}
+
+.metadata-dim {
+  color: var(--fg-dim);
+}
+
+.metadata-none {
+  margin: 0;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+/* Raw EXIF Inspector */
+.raw-exif-toggle {
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  margin: 0;
+}
+
+.raw-exif-toggle:hover {
+  text-decoration: underline;
+  border-color: transparent;
+}
+
+.raw-exif-body {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.raw-exif-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.raw-exif-prompt {
+  color: var(--fg-dim);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.raw-exif-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.raw-exif-input:focus {
+  border-color: var(--accent);
+}
+
+.raw-exif-count {
+  color: var(--fg-dim);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.raw-exif-table-wrapper {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  width: 100%;
+}
+
+.raw-exif-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.raw-exif-table th,
+.raw-exif-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.raw-exif-table th {
+  background: var(--bg-alt);
+  color: var(--fg-dim);
+  font-weight: normal;
+  text-transform: lowercase;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.raw-exif-table td.tag-id {
+  color: var(--fg-dim);
+  width: 100px;
+  white-space: nowrap;
+}
+
+.raw-exif-table td.tag-name {
+  color: var(--fg);
+  width: 200px;
+}
+
+.raw-exif-table td.tag-val {
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.table-empty {
+  text-align: center;
+  color: var(--fg-dim);
+  padding: 16px !important;
+}
