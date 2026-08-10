@@ -1,9 +1,3 @@
-"""Eagle backend.
-
-Single endpoint that accepts an uploaded image, extracts GPS coordinates
-and full EXIF metadata, and reverse geocodes coordinates when present.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -24,7 +18,6 @@ app = FastAPI(
     version="1.2.0",
 )
 
-# Allow the Vite dev server (and any other configured origin) to call this API.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MAX_UPLOAD_BYTES = 25 * 1024 * 1024  # 25 MB
+MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 
 
 @app.get("/api/health")
@@ -43,8 +36,6 @@ async def health_check() -> dict:
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
 async def analyze_image(file: UploadFile = File(...)) -> AnalyzeResponse:
-    """Reads an uploaded image, extracts all EXIF data & properties, and reverse geocodes GPS if available."""
-
     image_bytes = await file.read()
 
     if not image_bytes:
@@ -56,7 +47,6 @@ async def analyze_image(file: UploadFile = File(...)) -> AnalyzeResponse:
     filename = file.filename or "unknown"
     full_meta = extract_full_metadata(image_bytes, filename)
 
-    # If format is None, neither Pillow nor pillow_heif could decode the image bytes
     if full_meta["file_info"].format is None:
         raise HTTPException(
             status_code=415,

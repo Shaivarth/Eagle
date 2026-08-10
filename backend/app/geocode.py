@@ -1,10 +1,3 @@
-"""Reverse geocoding of coordinates to a human-readable place name.
-
-Uses the free OpenStreetMap Nominatim API. Nominatim's usage policy requires
-a descriptive User-Agent and at most one request per second per client, both
-of which are respected here.
-"""
-
 from __future__ import annotations
 
 from typing import Optional
@@ -18,11 +11,6 @@ USER_AGENT = "Eagle/1.0 (EXIF location viewer; contact: local-dev)"
 
 
 async def reverse_geocode(latitude: float, longitude: float) -> LocationInfo:
-    """Looks up city / state / country for a coordinate pair.
-
-    Raises httpx.HTTPError (or similar) on network/HTTP failure so the
-    caller can decide how to surface that to the client.
-    """
     params = {
         "lat": latitude,
         "lon": longitude,

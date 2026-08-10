@@ -1,5 +1,3 @@
-"""Pydantic models describing the shape of API responses."""
-
 from __future__ import annotations
 
 from typing import List, Optional
@@ -7,8 +5,6 @@ from pydantic import BaseModel
 
 
 class LocationInfo(BaseModel):
-    """Human-readable location derived from reverse geocoding."""
-
     city: Optional[str] = None
     state: Optional[str] = None
     country: Optional[str] = None
@@ -16,8 +12,6 @@ class LocationInfo(BaseModel):
 
 
 class ImageFileInfo(BaseModel):
-    """Basic file and image format properties."""
-
     file_size_bytes: int
     formatted_file_size: str
     format: Optional[str] = None
@@ -29,8 +23,6 @@ class ImageFileInfo(BaseModel):
 
 
 class CameraInfo(BaseModel):
-    """Camera hardware and software details."""
-
     make: Optional[str] = None
     model: Optional[str] = None
     lens_model: Optional[str] = None
@@ -38,8 +30,6 @@ class CameraInfo(BaseModel):
 
 
 class ExposureInfo(BaseModel):
-    """Shot capture and exposure settings."""
-
     date_time_original: Optional[str] = None
     exposure_time: Optional[str] = None
     aperture: Optional[str] = None
@@ -54,8 +44,6 @@ class ExposureInfo(BaseModel):
 
 
 class GpsMetadata(BaseModel):
-    """Detailed GPS location and coordinate formats."""
-
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     latitude_dms: Optional[str] = None
@@ -65,16 +53,12 @@ class GpsMetadata(BaseModel):
 
 
 class RawExifTag(BaseModel):
-    """Key-value representation of raw EXIF header tags."""
-
     tag_id: str
     tag_name: str
     value: str
 
 
 class AnalyzeResponse(BaseModel):
-    """Full result returned after an uploaded image has been analyzed."""
-
     filename: str
     has_gps: bool
     latitude: Optional[float] = None

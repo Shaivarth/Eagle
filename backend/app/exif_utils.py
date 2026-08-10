@@ -1,20 +1,10 @@
-"""Extracts EXIF metadata and image properties from an uploaded image.
-
-Extracts:
-- Basic file and image specs (size, format, MIME, dimensions, MP, color mode)
-- Camera & hardware specs (make, model, lens model, software)
-- Shot & exposure settings (date/time, aperture, shutter speed, ISO, focal length, flash, etc.)
-- GPS location & elevation (decimal, DMS, altitude, timestamp)
-- Raw EXIF tags list for deep inspection
-"""
-
 from __future__ import annotations
 
 import io
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from PIL import ExifTags, Image
+from PIL import Image
 from PIL.ExifTags import GPSTAGS, TAGS
 
 from app.schemas import (
@@ -33,7 +23,6 @@ except ImportError:
 
 
 def _ratio_to_float(value: Any) -> float:
-    """Converts a Pillow IFDRational, float, int, or tuple to float safely."""
     if value is None:
         return 0.0
     try:
@@ -46,7 +35,6 @@ def _ratio_to_float(value: Any) -> float:
 
 
 def _dms_to_decimal(dms: Tuple, reference: str) -> float:
-    """Converts (degrees, minutes, seconds) EXIF GPS data to decimal degrees."""
     degrees = _ratio_to_float(dms[0])
     minutes = _ratio_to_float(dms[1])
     seconds = _ratio_to_float(dms[2])
@@ -58,7 +46,6 @@ def _dms_to_decimal(dms: Tuple, reference: str) -> float:
 
 
 def _dms_to_string(dms: Tuple, reference: str) -> Optional[str]:
-    """Formats DMS tuple into readable string e.g. 23° 04' 49.56" N."""
     try:
         deg = int(_ratio_to_float(dms[0]))
         min_ = int(_ratio_to_float(dms[1]))
@@ -78,7 +65,6 @@ def _format_file_size(size_bytes: int) -> str:
 
 
 def _clean_val(val: Any) -> str:
-    """Converts EXIF values safely to strings for raw display."""
     if val is None:
         return ""
     if isinstance(val, bytes):
@@ -183,17 +169,7 @@ def _format_exposure_program(val: Any) -> Optional[str]:
         return None
 
 
-def extract_gps_coordinates(image_bytes: bytes) -> Optional[Tuple[float, float]]:
-    """Extracts (latitude, longitude) from EXIF metadata if present."""
-    metadata = extract_full_metadata(image_bytes, "uploaded_image")
-    gps = metadata.get("gps_info")
-    if gps and gps.latitude is not None and gps.longitude is not None:
-        return gps.latitude, gps.longitude
-    return None
-
-
 def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
-    """Parses full image properties and EXIF metadata from raw image bytes."""
     size_bytes = len(image_bytes)
     formatted_size = _format_file_size(size_bytes)
 
@@ -206,7 +182,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     color_mode = None
     mime_type = None
 
-    # Step 1: Open image using Pillow
     try:
         image = Image.open(io.BytesIO(image_bytes))
         fmt = image.format
@@ -218,7 +193,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     except Exception:
         image = None
 
-    # Step 2: HEIC / HEIF direct pillow_heif fallback
     filename_lower = filename.lower()
     is_heic_file = filename_lower.endswith(".heic") or filename_lower.endswith(".heif")
     try:
@@ -246,7 +220,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     except Exception:
         pass
 
-    # Step 3: Raw info["exif"] fallback if exif_obj is still empty
     if image is not None and (not exif_obj or len(exif_obj) == 0):
         raw_info_exif = image.info.get("exif") if hasattr(image, "info") else None
         if raw_info_exif and isinstance(raw_info_exif, bytes):
@@ -281,7 +254,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     combined_exif: dict[str, Any] = {}
     raw_tags_list: list[RawExifTag] = []
 
-    # 1. Main EXIF IFD
     for tag_id, value in exif_obj.items():
         tag_name = TAGS.get(tag_id, f"Tag_{tag_id}")
         combined_exif[tag_name] = value
@@ -295,7 +267,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
                 )
             )
 
-    # 2. ExifOffset Sub-IFD (0x8769)
     exif_sub_tag = next((tag for tag, name in TAGS.items() if name == "ExifOffset"), 0x8769)
     try:
         exif_ifd = exif_obj.get_ifd(exif_sub_tag)
@@ -315,7 +286,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     except Exception:
         pass
 
-    # 3. GPSInfo Sub-IFD (0x8825)
     gps_sub_tag = next((tag for tag, name in TAGS.items() if name == "GPSInfo"), 0x8825)
     gps_dict: dict[str, Any] = {}
     try:
@@ -336,7 +306,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     except Exception:
         pass
 
-    # Extract Camera Info
     camera_info = CameraInfo(
         make=_clean_val(combined_exif.get("Make")) or None,
         model=_clean_val(combined_exif.get("Model")) or None,
@@ -344,7 +313,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
         software=_clean_val(combined_exif.get("Software")) or None,
     )
 
-    # Extract Exposure Info
     date_orig = (
         _clean_val(combined_exif.get("DateTimeOriginal"))
         or _clean_val(combined_exif.get("DateTimeDigitized"))
@@ -366,7 +334,6 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
         exposure_program=_format_exposure_program(combined_exif.get("ExposureProgram")),
     )
 
-    # Extract GPS Info
     lat_dms = gps_dict.get("GPSLatitude")
     lat_ref = gps_dict.get("GPSLatitudeRef")
     lon_dms = gps_dict.get("GPSLongitude")

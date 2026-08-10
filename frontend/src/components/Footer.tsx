@@ -1,10 +1,10 @@
-import React from "react";
+import type { ReactNode } from "react";
 import "./Footer.css";
 
 interface SocialLink {
   name: string;
   url: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 export default function Footer() {

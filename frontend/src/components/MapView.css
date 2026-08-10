@@ -11,8 +11,6 @@
   background: var(--bg-alt);
 }
 
-/* Leaflet ships its own rounded/shadowed control styling; strip it down
-   to match the flat, undecorated aesthetic of the rest of the page. */
 .map-view .leaflet-control-zoom a {
   border-radius: 0 !important;
 }

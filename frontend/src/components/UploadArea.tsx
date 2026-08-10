@@ -29,7 +29,6 @@ export default function UploadArea({
     if (file) {
       onFileSelected(file);
     }
-    // Reset so selecting the same file again still fires onChange.
     event.target.value = "";
   };
 

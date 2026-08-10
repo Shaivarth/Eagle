@@ -56,7 +56,6 @@ export default function MetadataResult({ result }: MetadataResultProps) {
 
   return (
     <div className="metadata-panel">
-      {/* Section 1: Image & File Properties (Top Section) */}
       <div className="metadata-section">
         <div className="metadata-section__header">[ file &amp; image properties ]</div>
         <dl className="metadata-list">
@@ -84,7 +83,6 @@ export default function MetadataResult({ result }: MetadataResultProps) {
         </dl>
       </div>
 
-      {/* Section 2: Location / GPS Data */}
       <div className="metadata-section">
         <div className="metadata-section__header">[ gps location ]</div>
         {result.has_gps && result.latitude !== null && result.longitude !== null ? (
@@ -137,7 +135,6 @@ export default function MetadataResult({ result }: MetadataResultProps) {
         )}
       </div>
 
-      {/* Section 3: Camera & Hardware */}
       <div className="metadata-section">
         <div className="metadata-section__header">[ camera &amp; hardware ]</div>
         {hasCameraData ? (
@@ -172,7 +169,6 @@ export default function MetadataResult({ result }: MetadataResultProps) {
         )}
       </div>
 
-      {/* Section 4: Exposure & Capture Settings */}
       <div className="metadata-section">
         <div className="metadata-section__header">[ exposure &amp; shot settings ]</div>
         {hasExposureData ? (
@@ -246,7 +242,6 @@ export default function MetadataResult({ result }: MetadataResultProps) {
         )}
       </div>
 
-      {/* Section 5: Raw EXIF Tags Inspector */}
       {raw_exif.length > 0 && (
         <div className="metadata-section">
           <button

@@ -3,8 +3,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./MapView.css";
 
-// Leaflet's default marker icon assets don't resolve correctly under
-// bundlers like Vite; point them at the CDN copies explicitly.
 const markerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconRetinaUrl:
