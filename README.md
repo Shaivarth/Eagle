@@ -31,10 +31,10 @@ You feed Eagle an image, it rips open the raw EXIF header, grabs the exact GPS c
 
 <p align="center">Open Terminal 1</p>
 
-```bash
-cd backend
-python -m venv .venv
-```
+<p align="center">
+<code>cd backend</code><br>
+<code>python -m venv .venv</code>
+</p>
 
 <p align="center"><strong>Activation</strong></p>
 
@@ -43,10 +43,10 @@ python -m venv .venv
 <strong>Linux / macOS:</strong> <code>source .venv/bin/activate</code>
 </p>
 
-```bash
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
+<p align="center">
+<code>pip install -r requirements.txt</code><br>
+<code>uvicorn app.main:app --reload --port 8000</code>
+</p>
 
 <p align="center">
 Backend is live at <code>http://localhost:8000</code><br>
@@ -59,11 +59,11 @@ Check API docs at <code>http://localhost:8000/docs</code>
 
 <p align="center">Open Terminal 2</p>
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+<p align="center">
+<code>cd frontend</code><br>
+<code>npm install</code><br>
+<code>npm run dev</code>
+</p>
 
 <p align="center">
 Pop open <code>http://localhost:5173</code> in your browser. Boom. You're set.
