@@ -14,7 +14,7 @@
 ---
 
 <p align="center">
-You feed Eagle an image, it rips open the raw EXIF header, grabs the exact GPS coordinates, reverse-geocodes the location, and drops a pin on an interactive map. If there's no GPS data in the file, it tells you straight up. Nothing is ever fabricated or guessed.
+You feed Eagle an image, it rips open the raw EXIF header, grabs the exact GPS coordinates, reverse-geocodes the location, and drops a pin on an interactive map. If there's No GPS data in the file, it tells you straight up. Nothing is ever fabricated or guessed. 
 </p>
 
 ---
