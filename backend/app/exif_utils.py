@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import io
 
 from typing import Any, Dict, List, Optional, Tuple
@@ -20,6 +21,20 @@ try:
     pillow_heif.register_heif_opener()
 except ImportError:
     pass
+
+
+def _generate_preview_base64(image: Image.Image, max_dim: int = 600) -> Optional[str]:
+    try:
+        preview_img = image.copy()
+        preview_img.thumbnail((max_dim, max_dim))
+        if preview_img.mode in ("RGBA", "P"):
+            preview_img = preview_img.convert("RGB")
+        buf = io.BytesIO()
+        preview_img.save(buf, format="JPEG", quality=85)
+        b64_str = base64.b64encode(buf.getvalue()).decode("utf-8")
+        return f"data:image/jpeg;base64,{b64_str}"
+    except Exception:
+        return None
 
 
 def _ratio_to_float(value: Any) -> float:
@@ -242,8 +257,11 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
         color_mode=color_mode,
     )
 
+    preview_url = _generate_preview_base64(image) if image is not None else None
+
     if not exif_obj:
         return {
+            "preview_url": preview_url,
             "file_info": file_info,
             "camera_info": CameraInfo(),
             "exposure_info": ExposureInfo(),
@@ -385,6 +403,7 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
     )
 
     return {
+        "preview_url": preview_url,
         "file_info": file_info,
         "camera_info": camera_info,
         "exposure_info": exposure_info,

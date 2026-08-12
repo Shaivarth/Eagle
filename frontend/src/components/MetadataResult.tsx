@@ -1,9 +1,11 @@
 import { useState } from "react";
+import MapView from "./MapView";
 import type { AnalyzeResponse } from "../types";
 import "./MetadataResult.css";
 
 interface MetadataResultProps {
   result: AnalyzeResponse;
+  imagePreviewUrl?: string | null;
 }
 
 function formatCoordinate(value: number | null): string {
@@ -26,7 +28,7 @@ function formatLocationLine(result: AnalyzeResponse): string | null {
   return location.display_name;
 }
 
-export default function MetadataResult({ result }: MetadataResultProps) {
+export default function MetadataResult({ result, imagePreviewUrl }: MetadataResultProps) {
   const [rawExifSearch, setRawExifSearch] = useState("");
   const [isRawExpanded, setIsRawExpanded] = useState(false);
 
@@ -54,34 +56,54 @@ export default function MetadataResult({ result }: MetadataResultProps) {
         exposure_info.focal_length)
   );
 
+  const displayImageSrc = result.preview_url || imagePreviewUrl;
+
   return (
     <div className="metadata-panel">
       <div className="metadata-section">
         <div className="metadata-section__header">[ file &amp; image properties ]</div>
-        <dl className="metadata-list">
-          <dt>filename:</dt>
-          <dd>{result.filename}</dd>
+        <div className="metadata-properties-grid">
+          {displayImageSrc && (
+            <div className="metadata-image-container">
+              <img
+                src={displayImageSrc}
+                alt={result.filename}
+                className="metadata-image-preview"
+              />
+            </div>
+          )}
+          <dl className="metadata-list">
+            <dt>filename:</dt>
+            <dd>{result.filename}</dd>
 
-          <dt>file size:</dt>
-          <dd>{file_info?.formatted_file_size ?? "unavailable"}</dd>
+            <dt>file size:</dt>
+            <dd>{file_info?.formatted_file_size ?? "unavailable"}</dd>
 
-          <dt>dimensions:</dt>
-          <dd>
-            {file_info?.width && file_info?.height
-              ? `${file_info.width} x ${file_info.height} px (${file_info.megapixels} MP)`
-              : "unavailable"}
-          </dd>
+            <dt>dimensions:</dt>
+            <dd>
+              {file_info?.width && file_info?.height
+                ? `${file_info.width} x ${file_info.height} px (${file_info.megapixels} MP)`
+                : "unavailable"}
+            </dd>
 
-          <dt>format:</dt>
-          <dd>{file_info?.format ?? "unavailable"}</dd>
+            <dt>format:</dt>
+            <dd>{file_info?.format ?? "unavailable"}</dd>
 
-          <dt>mime type:</dt>
-          <dd>{file_info?.mime_type ?? "unavailable"}</dd>
-
-          <dt>color mode:</dt>
-          <dd>{file_info?.color_mode ?? "unavailable"}</dd>
-        </dl>
+            <dt>color mode:</dt>
+            <dd>{file_info?.color_mode ?? "unavailable"}</dd>
+          </dl>
+        </div>
       </div>
+
+      {result.has_gps &&
+        result.latitude !== null &&
+        result.longitude !== null && (
+          <MapView
+            latitude={result.latitude}
+            longitude={result.longitude}
+            label={result.location?.display_name ?? undefined}
+          />
+        )}
 
       <div className="metadata-section">
         <div className="metadata-section__header">[ gps location ]</div>

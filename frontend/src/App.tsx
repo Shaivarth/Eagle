@@ -1,7 +1,6 @@
 import { useState } from "react";
 import UploadArea from "./components/UploadArea";
 import MetadataResult from "./components/MetadataResult";
-import MapView from "./components/MapView";
 import Footer from "./components/Footer";
 import EagleEmblem from "./components/EagleEmblem";
 import { analyzeImage } from "./api";
@@ -13,11 +12,17 @@ type Status = "idle" | "loading" | "done" | "error";
 export default function App() {
   const [status, setStatus] = useState<Status>("idle");
   const [fileName, setFileName] = useState<string | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleFileSelected = async (file: File) => {
     setFileName(file.name);
+    if (imagePreviewUrl) {
+      URL.revokeObjectURL(imagePreviewUrl);
+    }
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreviewUrl(previewUrl);
     setResult(null);
     setErrorMessage(null);
     setStatus("loading");
@@ -68,23 +73,9 @@ export default function App() {
         )}
 
         {status === "done" && result && (
-          <>
-            <section className="app__section">
-              <MetadataResult result={result} />
-            </section>
-
-            {result.has_gps &&
-              result.latitude !== null &&
-              result.longitude !== null && (
-                <section className="app__section">
-                  <MapView
-                    latitude={result.latitude}
-                    longitude={result.longitude}
-                    label={result.location?.display_name ?? undefined}
-                  />
-                </section>
-              )}
-          </>
+          <section className="app__section">
+            <MetadataResult result={result} imagePreviewUrl={imagePreviewUrl} />
+          </section>
         )}
       </div>
 

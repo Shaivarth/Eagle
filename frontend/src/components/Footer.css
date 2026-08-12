@@ -19,7 +19,7 @@
 }
 
 .footer__author-name {
-  color: var(--accent);
+  color: var(--fg);
   font-weight: 700;
 }
 
@@ -52,7 +52,7 @@
   background: var(--accent);
   border-color: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(143, 191, 127, 0.2);
+  box-shadow: 0 4px 12px rgba(184, 146, 255, 0.2);
 }
 
 .footer__social-link svg {

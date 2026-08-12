@@ -23,6 +23,53 @@
   text-align: center;
 }
 
+.metadata-properties-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.metadata-image-container {
+  flex: 0 0 160px;
+  max-width: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.metadata-image-preview {
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  border: none;
+}
+
+.metadata-properties-grid .metadata-list {
+  flex: 1;
+  max-width: 380px;
+  margin: 0;
+}
+
+@media (max-width: 580px) {
+  .metadata-properties-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .metadata-image-container {
+    flex: none;
+    max-width: 100%;
+  }
+
+  .metadata-properties-grid .metadata-list {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
 .metadata-list {
   display: grid;
   grid-template-columns: 160px 1fr;

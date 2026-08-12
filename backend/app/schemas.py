@@ -65,6 +65,7 @@ class AnalyzeResponse(BaseModel):
     longitude: Optional[float] = None
     location: Optional[LocationInfo] = None
     geocode_error: Optional[str] = None
+    preview_url: Optional[str] = None
     file_info: Optional[ImageFileInfo] = None
     camera_info: Optional[CameraInfo] = None
     exposure_info: Optional[ExposureInfo] = None

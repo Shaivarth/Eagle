@@ -13,7 +13,7 @@
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "Courier New", monospace;
   font-size: clamp(7px, 1.1vw, 11px);
   line-height: 1.15;
-  color: var(--fg-dim);
+  color: var(--accent);
   margin: 0 auto;
   padding: 0;
   text-align: left;

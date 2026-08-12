@@ -75,6 +75,7 @@ async def analyze_image(file: UploadFile = File(...)) -> AnalyzeResponse:
         longitude=longitude,
         location=location,
         geocode_error=geocode_error,
+        preview_url=full_meta.get("preview_url"),
         file_info=full_meta["file_info"],
         camera_info=full_meta["camera_info"],
         exposure_info=full_meta["exposure_info"],

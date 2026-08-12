@@ -19,6 +19,14 @@ You feed Eagle an image, it rips open the raw EXIF header, grabs the exact GPS c
 
 ---
 
+## Demo
+
+<p align="center">
+  <img src="assets/demo.gif" alt="Eagle Demo" width="100%" max-width="800px" style="border-radius: 8px;" />
+</p>
+
+---
+
 ## Prerequisites
 
 <p align="center">

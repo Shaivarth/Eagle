@@ -4,7 +4,7 @@
   --fg: #d4d4d4;
   --fg-dim: #808080;
   --border: #3a3a3a;
-  --accent: #8fbf7f;
+  --accent: #b892ff;
   --error: #d47f7f;
 
   color-scheme: dark;
@@ -18,10 +18,16 @@ html,
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(184, 146, 255, 0.18), transparent 70%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--fg);
   font-family: "IBM Plex Mono", "Courier New", ui-monospace, monospace;
   font-size: 14px;
@@ -30,6 +36,9 @@ body {
 
 #root {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 a {

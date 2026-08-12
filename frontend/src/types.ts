@@ -59,6 +59,7 @@ export interface AnalyzeResponse {
   longitude: number | null;
   location: LocationInfo | null;
   geocode_error: string | null;
+  preview_url?: string | null;
   file_info: ImageFileInfo | null;
   camera_info: CameraInfo | null;
   exposure_info: ExposureInfo | null;
