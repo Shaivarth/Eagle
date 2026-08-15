@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 import httpx
+from PIL import Image
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -27,6 +28,7 @@ app.add_middleware(
 )
 
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+UPLOAD_CHUNK_SIZE = 1024 * 1024  # 1 MB chunk reading
 
 
 @app.get("/api/health")
@@ -36,16 +38,29 @@ async def health_check() -> dict:
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
 async def analyze_image(file: UploadFile = File(...)) -> AnalyzeResponse:
-    image_bytes = await file.read()
+    # Stream in chunks to prevent unbounded memory allocation
+    buffer = bytearray()
+    while chunk := await file.read(UPLOAD_CHUNK_SIZE):
+        buffer.extend(chunk)
+        if len(buffer) > MAX_UPLOAD_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail=f"Image exceeds maximum upload limit of {MAX_UPLOAD_BYTES // (1024 * 1024)} MB.",
+            )
 
-    if not image_bytes:
+    if not buffer:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
-    if len(image_bytes) > MAX_UPLOAD_BYTES:
-        raise HTTPException(status_code=413, detail="Image exceeds 25 MB limit.")
-
+    image_bytes = bytes(buffer)
     filename = file.filename or "unknown"
-    full_meta = extract_full_metadata(image_bytes, filename)
+
+    try:
+        full_meta = extract_full_metadata(image_bytes, filename)
+    except Image.DecompressionBombError:
+        raise HTTPException(
+            status_code=400,
+            detail="Image dimensions exceed safety limits (potential decompression bomb).",
+        )
 
     if full_meta["file_info"].format is None:
         raise HTTPException(

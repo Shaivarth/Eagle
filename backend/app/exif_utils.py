@@ -199,12 +199,16 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
 
     try:
         image = Image.open(io.BytesIO(image_bytes))
+        width, height = image.size
+        if width * height > 100_000_000:
+            raise Image.DecompressionBombError("Image dimensions exceed 100 Megapixel safety limit.")
         fmt = image.format
         mime_type = Image.MIME.get(fmt, f"image/{fmt.lower()}" if fmt else None)
-        width, height = image.size
         megapixels = round((width * height) / 1_000_000, 2)
         color_mode = image.mode
         exif_obj = image.getexif()
+    except Image.DecompressionBombError:
+        raise
     except Exception:
         image = None
 
@@ -214,6 +218,10 @@ def extract_full_metadata(image_bytes: bytes, filename: str) -> dict[str, Any]:
         import pillow_heif
         if is_heic_file or image is None:
             heif_file = pillow_heif.open_heif(io.BytesIO(image_bytes))
+            h_width, h_height = heif_file.size
+            if h_width * h_height > 100_000_000:
+                raise Image.DecompressionBombError("HEIC dimensions exceed 100 Megapixel safety limit.")
+
             if image is None:
                 image = heif_file.to_pillow()
                 fmt = "HEIC"
