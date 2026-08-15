@@ -27,7 +27,7 @@ def _generate_preview_base64(image: Image.Image, max_dim: int = 600) -> Optional
     try:
         preview_img = image.copy()
         preview_img.thumbnail((max_dim, max_dim))
-        if preview_img.mode in ("RGBA", "P"):
+        if preview_img.mode != "RGB":
             preview_img = preview_img.convert("RGB")
         buf = io.BytesIO()
         preview_img.save(buf, format="JPEG", quality=85)
