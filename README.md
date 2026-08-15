@@ -34,7 +34,7 @@
 
 <h3 align="center">Setup Backend</h3>
 
-<p align="center">
+<p align="justify">
 First, pop open a terminal, hop into the <code>backend</code> directory with <code>cd backend</code>, and create an isolated environment by running <code>python -m venv .venv</code>. Activate it using <code>.venv\Scripts\Activate.ps1</code> on Windows (or <code>source .venv/bin/activate</code> on Linux/macOS). Once active, grab all the required packages via <code>pip install -r requirements.txt</code>, then start the server with <code>uvicorn app.main:app --reload --port 8000</code>. Your backend is now listening at <code>http://localhost:8000</code>, and you can inspect the interactive Swagger docs at <code>http://localhost:8000/docs</code>.
 </p>
 
@@ -42,7 +42,7 @@ First, pop open a terminal, hop into the <code>backend</code> directory with <co
 
 <h3 align="center">Setup Frontend</h3>
 
-<p align="center">
+<p align="justify">
 In a second terminal window, head over to the frontend with <code>cd frontend</code> and install the necessary dependencies using <code>npm install</code>. Once that's done, fire up the Vite dev server with <code>npm run dev</code>, open <code>http://localhost:5173</code> in your browser, drag and drop an image in, and you're good to go.
 </p>
 
