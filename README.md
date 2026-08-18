@@ -40,8 +40,6 @@ Eagle is distributed on PyPI as <code>eagle-x</code> and exposes the terminal co
 
 <h4 align="center">Windows (PowerShell / Command Prompt)</h4>
 
-<div align="center">
-
 ```powershell
 # Install from PyPI
 pip install eagle-x
@@ -53,6 +51,9 @@ eagle
 eagle hunt photo.jpg
 eagle hunt "C:\Users\YourName\Pictures\photo.jpg"
 
+# Reverse-geocode coordinates to street address
+eagle hunt photo.jpg --geocode
+
 # Output clean JSON to stdout
 eagle hunt photo.jpg --json
 
@@ -60,11 +61,7 @@ eagle hunt photo.jpg --json
 pip install --upgrade eagle-x
 ```
 
-</div>
-
 <h4 align="center">macOS / Linux (Terminal)</h4>
-
-<div align="center">
 
 ```bash
 # Install from PyPI
@@ -77,14 +74,15 @@ eagle
 eagle hunt photo.jpg
 eagle hunt ~/Pictures/photo.jpg
 
+# Reverse-geocode coordinates to street address
+eagle hunt photo.jpg --geocode
+
 # Output clean JSON to stdout
 eagle hunt photo.jpg --json
 
 # Upgrade to latest version
 pip3 install --upgrade eagle-x
 ```
-
-</div>
 
 ---
 
@@ -110,8 +108,6 @@ Eagle supports deep header inspection across JPEG, PNG, HEIC/HEIF, TIFF, WebP, a
 You can integrate Eagle directly into your Python scripts and forensics pipelines without invoking the CLI:
 </p>
 
-<div align="center">
-
 ```python
 from eagle import analyze_image_file
 
@@ -121,8 +117,6 @@ print(f"Camera: {result.camera_info.make} {result.camera_info.model}")
 if result.has_gps:
     print(f"Coordinates: {result.latitude}, {result.longitude}")
 ```
-
-</div>
 
 ---
 
@@ -136,8 +130,6 @@ Pop open a terminal, hop into the <code>backend</code> directory with <code>cd b
 
 <h4 align="center">Windows (PowerShell)</h4>
 
-<div align="center">
-
 ```powershell
 cd backend
 python -m venv .venv
@@ -146,11 +138,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-</div>
-
 <h4 align="center">macOS / Linux (Terminal)</h4>
-
-<div align="center">
 
 ```bash
 cd backend
@@ -159,8 +147,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
-
-</div>
 
 <p align="justify">
 Your backend is now listening at <code>http://localhost:8000</code>, and you can inspect the interactive Swagger docs at <code>http://localhost:8000/docs</code>.
@@ -176,15 +162,11 @@ In a second terminal window, head over to the frontend with <code>cd frontend</c
 
 <h4 align="center">Windows / macOS / Linux</h4>
 
-<div align="center">
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-</div>
 
 ---
 
