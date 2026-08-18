@@ -38,7 +38,9 @@
 Eagle is distributed on PyPI as <code>eagle-x</code> and exposes the terminal command <code>eagle</code>. Install the package directly using pip, then analyze any image on your local filesystem with <code>eagle hunt photo.jpg</code>. For automation and OSINT pipelines, stream pure structured JSON output using <code>eagle hunt photo.jpg --json</code>, or perform reverse geocoding via <code>eagle hunt photo.jpg --geocode</code>.
 </p>
 
-#### Windows (PowerShell / Command Prompt)
+<h4 align="center">Windows (PowerShell / Command Prompt)</h4>
+
+<div align="center">
 
 ```powershell
 # Install from PyPI
@@ -58,7 +60,11 @@ eagle hunt photo.jpg --json
 pip install --upgrade eagle-x
 ```
 
-#### macOS / Linux (Terminal)
+</div>
+
+<h4 align="center">macOS / Linux (Terminal)</h4>
+
+<div align="center">
 
 ```bash
 # Install from PyPI
@@ -78,79 +84,7 @@ eagle hunt photo.jpg --json
 pip3 install --upgrade eagle-x
 ```
 
----
-
-<h3 align="center">Terminal Output</h3>
-
-<p align="justify">
-When running the hunting command, Eagle extracts hardware specifications, exposure settings, GPS coordinates, and raw EXIF headers directly inside the terminal:
-</p>
-
-```text
-                        z$b
-               .e$$$b.  $$$F  .d$$be
-           .d$$$$$$$$$$e$$$be$$$$$$$$$$e.
-       .e$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$b.
-     z$$$$$$$P**""**$$$$$$$$$$$P*""""***$$$$$b.
-   z$$$$*"            "$$$$$$"            "*$$$$c
- z$$*"                 ^$$$$                  "*$$.
-^"                      $$$F                      ^%
-                        $$$b
-                        $P*$
-                       4P  *r
-                       4    %
-
-╔════════════════════════════════════════════════════════════╗
-║                           EAGLE                            ║
-║               IMAGE INTELLIGENCE & FORENSICS               ║
-║                    github.com/shaivarth                    ║
-╚════════════════════════════════════════════════════════════╝
-
-FILE ───────────────────────────────────────────────────────
-  Name        : photo.jpg
-  Size        : 4.82 MB (5,054,144 bytes)
-  Format      : JPEG
-  MIME Type   : image/jpeg
-  Dimensions  : 4032 × 3024 px
-  Megapixels  : 12.19 MP
-  Color Mode  : RGB
-
-CAMERA ─────────────────────────────────────────────────────
-  Make        : Apple
-  Model       : iPhone 15 Pro
-  Lens        : iPhone 15 Pro back triple camera 6.76mm f/1.78
-  Software    : 17.5.1
-
-EXPOSURE ───────────────────────────────────────────────────
-  Date/Time   : 2024:06:15 14:32:08
-  Shutter     : 1/120 s
-  Aperture    : f/1.8
-  ISO         : ISO 64
-  Focal Length: 6.8 mm
-  35mm Equiv  : 24 mm
-  Flash       : Flash did not fire
-  White Bal.  : Auto
-  Metering    : Pattern / Multi-Segment
-  Program     : Normal / Program AE
-
-LOCATION ───────────────────────────────────────────────────
-  GPS Status  : Available
-  Latitude    : 37.774900° (37° 46' 29.64" N)
-  Longitude   : -122.419400° (122° 25' 09.84" W)
-  Altitude    : 15.2 m (49.9 ft)
-  GPS Time    : 2024:06:15 21:32:08 UTC
-  Geocoding   : Disabled (use --geocode to resolve address)
-
-EXIF ───────────────────────────────────────────────────────
-  Total Tags  : 42 extracted
-  Top Tags    :
-    - [0x010F] Make                    : Apple
-    - [0x0110] Model                   : iPhone 15 Pro
-    - [0x9003] DateTimeOriginal        : 2024:06:15 14:32:08
-    ... and 39 more tags (use --json to view all)
-────────────────────────────────────────────────────────────
-Analysis complete.
-```
+</div>
 
 ---
 
@@ -176,6 +110,8 @@ Eagle supports deep header inspection across JPEG, PNG, HEIC/HEIF, TIFF, WebP, a
 You can integrate Eagle directly into your Python scripts and forensics pipelines without invoking the CLI:
 </p>
 
+<div align="center">
+
 ```python
 from eagle import analyze_image_file
 
@@ -185,6 +121,8 @@ print(f"Camera: {result.camera_info.make} {result.camera_info.model}")
 if result.has_gps:
     print(f"Coordinates: {result.latitude}, {result.longitude}")
 ```
+
+</div>
 
 ---
 
@@ -196,7 +134,9 @@ if result.has_gps:
 Pop open a terminal, hop into the <code>backend</code> directory with <code>cd backend</code>, and create an isolated virtual environment:
 </p>
 
-#### Windows (PowerShell)
+<h4 align="center">Windows (PowerShell)</h4>
+
+<div align="center">
 
 ```powershell
 cd backend
@@ -206,7 +146,11 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-#### macOS / Linux (Terminal)
+</div>
+
+<h4 align="center">macOS / Linux (Terminal)</h4>
+
+<div align="center">
 
 ```bash
 cd backend
@@ -215,6 +159,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
+
+</div>
 
 <p align="justify">
 Your backend is now listening at <code>http://localhost:8000</code>, and you can inspect the interactive Swagger docs at <code>http://localhost:8000/docs</code>.
@@ -228,13 +174,17 @@ Your backend is now listening at <code>http://localhost:8000</code>, and you can
 In a second terminal window, head over to the frontend with <code>cd frontend</code> and install the necessary dependencies using <code>npm install</code>. Once that's done, fire up the Vite dev server with <code>npm run dev</code>, open <code>http://localhost:5173</code> in your browser, drag and drop an image in, and you're good to go.
 </p>
 
-#### Windows / macOS / Linux
+<h4 align="center">Windows / macOS / Linux</h4>
+
+<div align="center">
 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+
+</div>
 
 ---
 
