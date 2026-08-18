@@ -13,9 +13,7 @@
         <img src="https://img.shields.io/badge/PyPI-eagle--x-3776AB?style=flat-square&logo=pypi&logoColor=white" alt="PyPI" />
         <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
         <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" />
-        <img src="https://img.shields.io/badge/Mapping-Leaflet-199900?style=flat-square&logo=leaflet&logoColor=white" alt="Leaflet" />
         <img src="https://img.shields.io/badge/Parser-Pillow_&_HEIF-E95420?style=flat-square" alt="Pillow HEIF" />
-        <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT License" />
       </p>
     </td>
     <td width="30%" align="center" valign="middle">
@@ -34,30 +32,79 @@
 
 ---
 
-## ⚡ Quick Start: Command-Line Interface (CLI)
+<h3 align="center">Command-Line Interface</h3>
 
-Eagle is distributed on PyPI as [`eagle-x`](https://pypi.org/project/eagle-x/) and provides the `eagle` command-line tool.
+<p align="justify">
+Eagle is distributed on PyPI as <code>eagle-x</code> and exposes the terminal command <code>eagle</code>. Install the package directly using pip, then analyze any image on your local filesystem with <code>eagle hunt photo.jpg</code>. For automation and OSINT pipelines, stream pure structured JSON output using <code>eagle hunt photo.jpg --json</code>, or perform reverse geocoding via <code>eagle hunt photo.jpg --geocode</code>.
+</p>
 
-### Installation
+#### Windows (PowerShell / Command Prompt)
 
-```bash
+```powershell
+# Install from PyPI
 pip install eagle-x
+
+# Launch the purple flight manual
+eagle
+
+# Hunt down metadata & GPS telemetry
+eagle hunt photo.jpg
+eagle hunt "C:\Users\YourName\Pictures\photo.jpg"
+
+# Output clean JSON to stdout
+eagle hunt photo.jpg --json
+
+# Upgrade to latest version
+pip install --upgrade eagle-x
 ```
 
-### Basic Hunting
-
-Analyze any local image on your filesystem:
+#### macOS / Linux (Terminal)
 
 ```bash
+# Install from PyPI
+pip3 install eagle-x
+
+# Launch the purple flight manual
+eagle
+
+# Hunt down metadata & GPS telemetry
 eagle hunt photo.jpg
+eagle hunt ~/Pictures/photo.jpg
+
+# Output clean JSON to stdout
+eagle hunt photo.jpg --json
+
+# Upgrade to latest version
+pip3 install --upgrade eagle-x
 ```
 
-Example Output:
+---
+
+<h3 align="center">Terminal Output</h3>
+
+<p align="justify">
+When running the hunting command, Eagle extracts hardware specifications, exposure settings, GPS coordinates, and raw EXIF headers directly inside the terminal:
+</p>
+
 ```text
-╔══════════════════════════════════════════════════════════╗
-║                          EAGLE                           ║
-║              IMAGE INTELLIGENCE & FORENSICS              ║
-╚══════════════════════════════════════════════════════════╝
+                        z$b
+               .e$$$b.  $$$F  .d$$be
+           .d$$$$$$$$$$e$$$be$$$$$$$$$$e.
+       .e$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$b.
+     z$$$$$$$P**""**$$$$$$$$$$$P*""""***$$$$$b.
+   z$$$$*"            "$$$$$$"            "*$$$$c
+ z$$*"                 ^$$$$                  "*$$.
+^"                      $$$F                      ^%
+                        $$$b
+                        $P*$
+                       4P  *r
+                       4    %
+
+╔════════════════════════════════════════════════════════════╗
+║                           EAGLE                            ║
+║               IMAGE INTELLIGENCE & FORENSICS               ║
+║                    github.com/shaivarth                    ║
+╚════════════════════════════════════════════════════════════╝
 
 FILE ───────────────────────────────────────────────────────
   Name        : photo.jpg
@@ -105,88 +152,33 @@ EXIF ─────────────────────────
 Analysis complete.
 ```
 
-### Automation & Machine-Readable Output (`--json`)
+---
 
-Output clean, structured JSON to `stdout` for piping into scripts, security workflows, or `jq`:
+<h3 align="center">Privacy & Security</h3>
 
-```bash
-eagle hunt photo.jpg --json
-```
-
-```json
-{
-  "filename": "photo.jpg",
-  "has_gps": true,
-  "latitude": 37.7749,
-  "longitude": -122.4194,
-  "file_info": {
-    "file_size_bytes": 5054144,
-    "formatted_file_size": "4.82 MB",
-    "format": "JPEG",
-    "mime_type": "image/jpeg",
-    "width": 4032,
-    "height": 3024,
-    "megapixels": 12.19,
-    "color_mode": "RGB"
-  },
-  "camera_info": {
-    "make": "Apple",
-    "model": "iPhone 15 Pro",
-    "lens_model": "iPhone 15 Pro back triple camera 6.76mm f/1.78",
-    "software": "17.5.1"
-  },
-  "exposure_info": { ... },
-  "gps_info": { ... },
-  "raw_exif": [ ... ]
-}
-```
-
-### Optional Reverse Geocoding (`--geocode`)
-
-Resolve GPS coordinates into a human-readable street/city/country address via OpenStreetMap Nominatim:
-
-```bash
-eagle hunt photo.jpg --geocode
-```
-
-### Development Invocation (Source Checkout)
-
-Run Eagle directly from the repository without installation:
-
-```bash
-python -m eagle hunt path/to/image.jpg
-```
+<p align="justify">
+Eagle analysis is 100% local by default. No image data or metadata is ever uploaded or transmitted over the network unless <code>--geocode</code> is explicitly passed to query OpenStreetMap Nominatim. Input images exceeding 100 Megapixels are rejected to protect against decompression bomb attacks, and binary tags are sanitized to prevent crashes.
+</p>
 
 ---
 
-## 🔒 Privacy & Security
+<h3 align="center">Supported Formats & Telemetry</h3>
 
-- **100% Local by Default**: `eagle hunt` runs entirely on your local machine. No image data or metadata is ever uploaded or transmitted over the network.
-- **Optional Geocoding**: Only when `--geocode` is explicitly passed will Eagle make an HTTPS request to OpenStreetMap Nominatim with the extracted coordinates.
-- **Decompression Bomb Protection**: Input images exceeding 100 Megapixels are rejected to prevent memory exhaustion attacks.
-- **Safe Parsing**: Binary tags and malformed EXIF data are sanitized to prevent crashes or terminal corruption.
-
----
-
-## 📸 Supported Formats & Features
-
-| Category | Supported Data |
-|----------|----------------|
-| **Image Formats** | JPEG / JPG, PNG, HEIC / HEIF, TIFF, WebP, BMP |
-| **File Attributes** | Dimensions, File Size, Megapixels, Color Mode, MIME type |
-| **Camera Hardware** | Manufacturer / Make, Model, Lens Model, Firmware / Software |
-| **Exposure Settings** | Timestamp, Shutter Speed, Aperture, ISO, Focal Length (incl. 35mm), Exposure Bias, Flash, White Balance, Metering Mode, Exposure Program |
-| **GPS Coordinates** | Latitude & Longitude (Decimal & DMS), Altitude, GPS Timestamp |
-| **Raw EXIF IFDs** | Standard 0th IFD, ExifOffset Sub-IFD, GPS IFD |
+<p align="justify">
+Eagle supports deep header inspection across JPEG, PNG, HEIC/HEIF, TIFF, WebP, and BMP images. Extracted telemetry includes file dimensions, color mode, megapixels, camera hardware, exposure settings, GPS coordinates (Decimal & DMS), altitude, GPS timestamp, and standard raw EXIF IFD structures.
+</p>
 
 ---
 
-## 🐍 Python Library Usage
+<h3 align="center">Python Library Usage</h3>
+
+<p align="justify">
+You can integrate Eagle directly into your Python scripts and forensics pipelines without invoking the CLI:
+</p>
 
 ```python
 from eagle import analyze_image_file
 
-# Analyze local image
 result = analyze_image_file("photo.jpg", geocode=False)
 
 print(f"Camera: {result.camera_info.make} {result.camera_info.model}")
@@ -196,33 +188,47 @@ if result.has_gps:
 
 ---
 
-## 🌐 Web Application Setup
+<h2 align="center">If you want GUI</h2>
 
-If you prefer the graphical user interface with the interactive Leaflet map:
+<h3 align="center">Setup Backend</h3>
 
-### 1. Setup Backend
+<p align="justify">
+Pop open a terminal, hop into the <code>backend</code> directory with <code>cd backend</code>, and create an isolated virtual environment:
+</p>
 
-Pop open a terminal, hop into the `backend` directory, and create an isolated environment:
+#### Windows (PowerShell)
 
-```bash
+```powershell
 cd backend
 python -m venv .venv
-
-# Activate environment:
-# Windows (PowerShell):
 .venv\Scripts\Activate.ps1
-# Linux / macOS:
-source .venv/bin/activate
-
-# Install dependencies and start server
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
-Your backend is listening at `http://localhost:8000` (Swagger docs at `http://localhost:8000/docs`).
 
-### 2. Setup Frontend
+#### macOS / Linux (Terminal)
 
-In a second terminal window:
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+<p align="justify">
+Your backend is now listening at <code>http://localhost:8000</code>, and you can inspect the interactive Swagger docs at <code>http://localhost:8000/docs</code>.
+</p>
+
+---
+
+<h3 align="center">Setup Frontend</h3>
+
+<p align="justify">
+In a second terminal window, head over to the frontend with <code>cd frontend</code> and install the necessary dependencies using <code>npm install</code>. Once that's done, fire up the Vite dev server with <code>npm run dev</code>, open <code>http://localhost:5173</code> in your browser, drag and drop an image in, and you're good to go.
+</p>
+
+#### Windows / macOS / Linux
 
 ```bash
 cd frontend
@@ -230,10 +236,8 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser, drag and drop an image, and inspect the forensics and map.
-
 ---
 
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+<p align="center">
+This project is open-source and available under the <a href="LICENSE">MIT License</a>.
+</p>
