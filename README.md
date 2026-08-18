@@ -44,12 +44,12 @@ Eagle is distributed on PyPI as [`eagle-x`](https://pypi.org/project/eagle-x/) a
 pip install eagle-x
 ```
 
-### Basic Analysis
+### Basic Hunting
 
 Analyze any local image on your filesystem:
 
 ```bash
-eagle analyze photo.jpg
+eagle hunt photo.jpg
 ```
 
 Example Output:
@@ -110,7 +110,7 @@ Analysis complete.
 Output clean, structured JSON to `stdout` for piping into scripts, security workflows, or `jq`:
 
 ```bash
-eagle analyze photo.jpg --json
+eagle hunt photo.jpg --json
 ```
 
 ```json
@@ -146,7 +146,7 @@ eagle analyze photo.jpg --json
 Resolve GPS coordinates into a human-readable street/city/country address via OpenStreetMap Nominatim:
 
 ```bash
-eagle analyze photo.jpg --geocode
+eagle hunt photo.jpg --geocode
 ```
 
 ### Development Invocation (Source Checkout)
@@ -154,14 +154,14 @@ eagle analyze photo.jpg --geocode
 Run Eagle directly from the repository without installation:
 
 ```bash
-python -m eagle analyze path/to/image.jpg
+python -m eagle hunt path/to/image.jpg
 ```
 
 ---
 
 ## 🔒 Privacy & Security
 
-- **100% Local by Default**: `eagle analyze` runs entirely on your local machine. No image data or metadata is ever uploaded or transmitted over the network.
+- **100% Local by Default**: `eagle hunt` runs entirely on your local machine. No image data or metadata is ever uploaded or transmitted over the network.
 - **Optional Geocoding**: Only when `--geocode` is explicitly passed will Eagle make an HTTPS request to OpenStreetMap Nominatim with the extracted coordinates.
 - **Decompression Bomb Protection**: Input images exceeding 100 Megapixels are rejected to prevent memory exhaustion attacks.
 - **Safe Parsing**: Binary tags and malformed EXIF data are sanitized to prevent crashes or terminal corruption.

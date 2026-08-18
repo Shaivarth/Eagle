@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
+import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from eagle import __version__
 from eagle.analyzer import (
@@ -14,7 +16,17 @@ from eagle.analyzer import (
     analyze_image_file,
 )
 from eagle.schemas import AnalyzeResponse
-from eagle.tui import render_analysis_header, render_startup_screen
+from eagle.tui import (
+    BOLD,
+    BOLD_PURPLE,
+    CYAN,
+    DIM_GRAY,
+    PURPLE,
+    RESET,
+    _should_colorize,
+    render_analysis_header,
+    render_startup_screen,
+)
 
 
 def _format_val(val: Optional[object], fallback: str = "Not available") -> str:
@@ -25,50 +37,57 @@ def _format_val(val: Optional[object], fallback: str = "Not available") -> str:
 
 def render_terminal_report(result: AnalyzeResponse) -> str:
     """Render a clean, human-readable terminal report of the analysis result."""
+    color = _should_colorize()
+    p = PURPLE if color else ""
+    bp = BOLD_PURPLE if color else ""
+    g = DIM_GRAY if color else ""
+    b = BOLD if color else ""
+    r = RESET if color else ""
+
     lines: list[str] = []
 
-    # Header with preserved ASCII Eagle emblem
+    # Header with preserved purple ASCII Eagle emblem
     lines.append(render_analysis_header())
     lines.append("")
 
     # File Section
-    lines.append("FILE ───────────────────────────────────────────────────────")
-    lines.append(f"  Name        : {result.filename}")
+    lines.append(f"{bp}FILE ───────────────────────────────────────────────────────{r}")
+    lines.append(f"  {b}Name{r}        : {result.filename}")
     if result.file_info:
-        lines.append(f"  Size        : {result.file_info.formatted_file_size} ({result.file_info.file_size_bytes:,} bytes)")
-        lines.append(f"  Format      : {_format_val(result.file_info.format)}")
-        lines.append(f"  MIME Type   : {_format_val(result.file_info.mime_type)}")
+        lines.append(f"  {b}Size{r}        : {result.file_info.formatted_file_size} ({result.file_info.file_size_bytes:,} bytes)")
+        lines.append(f"  {b}Format{r}      : {_format_val(result.file_info.format)}")
+        lines.append(f"  {b}MIME Type{r}   : {_format_val(result.file_info.mime_type)}")
         if result.file_info.width and result.file_info.height:
-            lines.append(f"  Dimensions  : {result.file_info.width} × {result.file_info.height} px")
+            lines.append(f"  {b}Dimensions{r}  : {result.file_info.width} × {result.file_info.height} px")
         else:
-            lines.append(f"  Dimensions  : Not available")
-        lines.append(f"  Megapixels  : {_format_val(f'{result.file_info.megapixels} MP' if result.file_info.megapixels else None)}")
-        lines.append(f"  Color Mode  : {_format_val(result.file_info.color_mode)}")
+            lines.append(f"  {b}Dimensions{r}  : Not available")
+        lines.append(f"  {b}Megapixels{r}  : {_format_val(f'{result.file_info.megapixels} MP' if result.file_info.megapixels else None)}")
+        lines.append(f"  {b}Color Mode{r}  : {_format_val(result.file_info.color_mode)}")
     else:
-        lines.append("  Details     : Not available")
+        lines.append(f"  {b}Details{r}     : Not available")
     lines.append("")
 
     # Camera Section
-    lines.append("CAMERA ─────────────────────────────────────────────────────")
+    lines.append(f"{bp}CAMERA ─────────────────────────────────────────────────────{r}")
     if result.camera_info and any([
         result.camera_info.make,
         result.camera_info.model,
         result.camera_info.lens_model,
         result.camera_info.software,
     ]):
-        lines.append(f"  Make        : {_format_val(result.camera_info.make)}")
-        lines.append(f"  Model       : {_format_val(result.camera_info.model)}")
-        lines.append(f"  Lens        : {_format_val(result.camera_info.lens_model)}")
-        lines.append(f"  Software    : {_format_val(result.camera_info.software)}")
+        lines.append(f"  {b}Make{r}        : {_format_val(result.camera_info.make)}")
+        lines.append(f"  {b}Model{r}       : {_format_val(result.camera_info.model)}")
+        lines.append(f"  {b}Lens{r}        : {_format_val(result.camera_info.lens_model)}")
+        lines.append(f"  {b}Software{r}    : {_format_val(result.camera_info.software)}")
     else:
-        lines.append("  Make        : Not available")
-        lines.append("  Model       : Not available")
-        lines.append("  Lens        : Not available")
-        lines.append("  Software    : Not available")
+        lines.append(f"  {b}Make{r}        : Not available")
+        lines.append(f"  {b}Model{r}       : Not available")
+        lines.append(f"  {b}Lens{r}        : Not available")
+        lines.append(f"  {b}Software{r}    : Not available")
     lines.append("")
 
     # Exposure Section
-    lines.append("EXPOSURE ───────────────────────────────────────────────────")
+    lines.append(f"{bp}EXPOSURE ───────────────────────────────────────────────────{r}")
     if result.exposure_info and any([
         result.exposure_info.date_time_original,
         result.exposure_info.exposure_time,
@@ -76,67 +95,87 @@ def render_terminal_report(result: AnalyzeResponse) -> str:
         result.exposure_info.iso,
         result.exposure_info.focal_length,
     ]):
-        lines.append(f"  Date/Time   : {_format_val(result.exposure_info.date_time_original)}")
-        lines.append(f"  Shutter     : {_format_val(result.exposure_info.exposure_time)}")
-        lines.append(f"  Aperture    : {_format_val(result.exposure_info.aperture)}")
-        lines.append(f"  ISO         : {_format_val(result.exposure_info.iso)}")
-        lines.append(f"  Focal Length: {_format_val(result.exposure_info.focal_length)}")
+        lines.append(f"  {b}Date/Time{r}   : {_format_val(result.exposure_info.date_time_original)}")
+        lines.append(f"  {b}Shutter{r}     : {_format_val(result.exposure_info.exposure_time)}")
+        lines.append(f"  {b}Aperture{r}    : {_format_val(result.exposure_info.aperture)}")
+        lines.append(f"  {b}ISO{r}         : {_format_val(result.exposure_info.iso)}")
+        lines.append(f"  {b}Focal Length{r}: {_format_val(result.exposure_info.focal_length)}")
         if result.exposure_info.focal_length_35mm:
-            lines.append(f"  35mm Equiv  : {result.exposure_info.focal_length_35mm}")
+            lines.append(f"  {b}35mm Equiv{r}  : {result.exposure_info.focal_length_35mm}")
         if result.exposure_info.exposure_bias:
-            lines.append(f"  Bias        : {result.exposure_info.exposure_bias}")
+            lines.append(f"  {b}Bias{r}        : {result.exposure_info.exposure_bias}")
         if result.exposure_info.flash:
-            lines.append(f"  Flash       : {result.exposure_info.flash}")
+            lines.append(f"  {b}Flash{r}       : {result.exposure_info.flash}")
         if result.exposure_info.white_balance:
-            lines.append(f"  White Bal.  : {result.exposure_info.white_balance}")
+            lines.append(f"  {b}White Bal.{r}  : {result.exposure_info.white_balance}")
         if result.exposure_info.metering_mode:
-            lines.append(f"  Metering    : {result.exposure_info.metering_mode}")
+            lines.append(f"  {b}Metering{r}    : {result.exposure_info.metering_mode}")
         if result.exposure_info.exposure_program:
-            lines.append(f"  Program     : {result.exposure_info.exposure_program}")
+            lines.append(f"  {b}Program{r}     : {result.exposure_info.exposure_program}")
     else:
-        lines.append("  Date/Time   : Not available")
-        lines.append("  Shutter     : Not available")
-        lines.append("  Aperture    : Not available")
-        lines.append("  ISO         : Not available")
-        lines.append("  Focal Length: Not available")
+        lines.append(f"  {b}Date/Time{r}   : Not available")
+        lines.append(f"  {b}Shutter{r}     : Not available")
+        lines.append(f"  {b}Aperture{r}    : Not available")
+        lines.append(f"  {b}ISO{r}         : Not available")
+        lines.append(f"  {b}Focal Length{r}: Not available")
     lines.append("")
 
     # Location Section
-    lines.append("LOCATION ───────────────────────────────────────────────────")
+    lines.append(f"{bp}LOCATION ───────────────────────────────────────────────────{r}")
     if result.has_gps and result.gps_info:
-        lines.append("  GPS Status  : Available")
-        lines.append(f"  Latitude    : {result.latitude:.6f}° ({_format_val(result.gps_info.latitude_dms)})")
-        lines.append(f"  Longitude   : {result.longitude:.6f}° ({_format_val(result.gps_info.longitude_dms)})")
-        lines.append(f"  Altitude    : {_format_val(result.gps_info.altitude)}")
-        lines.append(f"  GPS Time    : {_format_val(result.gps_info.timestamp)}")
+        lines.append(f"  {b}GPS Status{r}  : {p}Available{r}")
+        lines.append(f"  {b}Latitude{r}    : {result.latitude:.6f}° ({_format_val(result.gps_info.latitude_dms)})")
+        lines.append(f"  {b}Longitude{r}   : {result.longitude:.6f}° ({_format_val(result.gps_info.longitude_dms)})")
+        lines.append(f"  {b}Altitude{r}    : {_format_val(result.gps_info.altitude)}")
+        lines.append(f"  {b}GPS Time{r}    : {_format_val(result.gps_info.timestamp)}")
         if result.location:
-            lines.append(f"  Location    : {_format_val(result.location.display_name)}")
+            lines.append(f"  {b}Location{r}    : {_format_val(result.location.display_name)}")
             if result.location.city or result.location.state or result.location.country:
-                parts = [p for p in [result.location.city, result.location.state, result.location.country] if p]
-                lines.append(f"  Address     : {', '.join(parts)}")
+                parts = [part for part in [result.location.city, result.location.state, result.location.country] if part]
+                lines.append(f"  {b}Address{r}     : {', '.join(parts)}")
         elif result.geocode_error:
-            lines.append(f"  Geocoding   : Error ({result.geocode_error})")
+            lines.append(f"  {b}Geocoding{r}   : Error ({result.geocode_error})")
         else:
-            lines.append("  Geocoding   : Disabled (use --geocode to resolve address)")
+            lines.append(f"  {b}Geocoding{r}   : Disabled (use --geocode to resolve address)")
     else:
-        lines.append("  GPS Status  : Not available")
+        lines.append(f"  {b}GPS Status{r}  : Not available")
     lines.append("")
 
     # EXIF Summary Section
-    lines.append("EXIF ───────────────────────────────────────────────────────")
+    lines.append(f"{bp}EXIF ───────────────────────────────────────────────────────{r}")
     tag_count = len(result.raw_exif)
-    lines.append(f"  Total Tags  : {tag_count} extracted")
+    lines.append(f"  {b}Total Tags{r}  : {tag_count} extracted")
     if tag_count > 0:
-        lines.append("  Top Tags    :")
+        lines.append(f"  {b}Top Tags{r}    :")
         for tag in result.raw_exif[:8]:
             val_display = tag.value if len(tag.value) <= 45 else tag.value[:42] + "..."
             lines.append(f"    - [{tag.tag_id}] {tag.tag_name:<24}: {val_display}")
         if tag_count > 8:
             lines.append(f"    ... and {tag_count - 8} more tags (use --json to view all)")
-    lines.append("────────────────────────────────────────────────────────────")
-    lines.append("Analysis complete.")
+    lines.append(f"{bp}────────────────────────────────────────────────────────────{r}")
+    lines.append(f"{p}Analysis complete.{r}")
 
     return "\n".join(lines)
+
+
+def _configure_hunt_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "image",
+        type=str,
+        help="Path to local image file (JPG, PNG, HEIC, TIFF, WebP, etc.)",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="json_output",
+        help="Output raw structured telemetry stream as JSON to stdout",
+    )
+    parser.add_argument(
+        "--geocode",
+        action="store_true",
+        dest="geocode",
+        help="Perform reverse geocoding on GPS coordinates via OpenStreetMap Nominatim",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -153,34 +192,24 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
 
-    # analyze subcommand
-    analyze_parser = subparsers.add_parser(
-        "analyze",
-        help="Analyze a local image file for forensics and EXIF/GPS metadata",
-        description="Read a local image and extract hardware, camera, exposure, GPS, and raw EXIF headers.",
+    # Primary eagle predator action: hunt
+    hunt_parser = subparsers.add_parser(
+        "hunt",
+        help="Hunt down EXIF/GPS metadata and forensic telemetry from an image",
+        description="Lock on a local image and rip hardware, camera, exposure, GPS, and raw EXIF headers.",
     )
-    analyze_parser.add_argument(
-        "image",
-        type=str,
-        help="Path to local image file (JPG, PNG, HEIC, TIFF, WebP, etc.)",
-    )
-    analyze_parser.add_argument(
-        "--json",
-        action="store_true",
-        dest="json_output",
-        help="Output raw structured analysis data as JSON to stdout",
-    )
-    analyze_parser.add_argument(
-        "--geocode",
-        action="store_true",
-        dest="geocode",
-        help="Perform reverse geocoding via OpenStreetMap Nominatim if GPS coordinates are present",
-    )
+    _configure_hunt_args(hunt_parser)
+
+    # Aliases for different predator actions & backward compatibility
+    for action in ["strike", "rip", "scan", "talon", "swoop", "analyze"]:
+        alias_parser = subparsers.add_parser(
+            action,
+            help=f"Alias for 'eagle hunt'",
+            description=f"Analyze local image (alias for 'eagle hunt').",
+        )
+        _configure_hunt_args(alias_parser)
 
     return parser
-
-
-import io
 
 
 def safe_print(text: str, file: Optional[Any] = None) -> None:
@@ -192,6 +221,9 @@ def safe_print(text: str, file: Optional[Any] = None) -> None:
         encoding = getattr(target, "encoding", None) or "utf-8"
         encoded = text.encode(encoding, errors="replace").decode(encoding)
         print(encoded, file=target)
+
+
+HUNT_COMMANDS = {"hunt", "strike", "rip", "scan", "talon", "swoop", "analyze"}
 
 
 def main(args: Optional[list[str]] = None) -> int:
@@ -213,7 +245,7 @@ def main(args: Optional[list[str]] = None) -> int:
         safe_print(render_startup_screen())
         return 0
 
-    if parsed_args.command == "analyze":
+    if parsed_args.command in HUNT_COMMANDS:
         image_path = parsed_args.image
         is_json = parsed_args.json_output
         do_geocode = parsed_args.geocode
