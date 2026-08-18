@@ -15,6 +15,7 @@ def test_cli_no_args_shows_startup_screen(capsys):
     assert "EAGLE" in captured.out
     assert "IMAGE INTELLIGENCE & FORENSICS" in captured.out
     assert "github.com/shaivarth" in captured.out
+    assert "pip install --upgrade eagle-x" in captured.out
     assert "COMMANDS & HUNTING ACTIONS:" in captured.out
     # Verify exact ASCII artwork signature elements
     assert "z$b" in captured.out
@@ -28,6 +29,7 @@ def test_cli_help(capsys):
     captured = capsys.readouterr()
     assert "Eagle" in captured.out
     assert "hunt" in captured.out
+    assert "pip install --upgrade eagle-x" in captured.out
 
 
 def test_cli_version(capsys):

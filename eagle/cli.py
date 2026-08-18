@@ -182,6 +182,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="eagle",
         description="Eagle — Digital Forensics & EXIF/GPS Metadata Extraction CLI",
+        epilog="To upgrade to the latest version:\n  pip install --upgrade eagle-x\n\nRepository: https://github.com/shaivarth/eagle",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(

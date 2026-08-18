@@ -81,6 +81,9 @@ def render_startup_screen() -> str:
     lines.append(f"  {p}eagle --help{r}                  Show flight manual and options")
     lines.append(f"  {p}eagle --version{r}               Show current version")
     lines.append("")
+    lines.append(f"{bp}UPGRADE:{r}")
+    lines.append(f"  {p}pip install --upgrade eagle-x{r}")
+    lines.append("")
     lines.append(f"{g}Aliases: 'eagle strike', 'eagle rip', 'eagle scan', 'eagle analyze'{r}")
     lines.append("")
 
