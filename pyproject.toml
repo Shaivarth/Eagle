@@ -1,0 +1,79 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eagle-x"
+version = "1.0.0"
+description = "Digital Forensics & EXIF/GPS Metadata Extraction CLI and Python Library"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Shaivarth" },
+]
+keywords = [
+    "exif",
+    "gps",
+    "metadata",
+    "forensics",
+    "osint",
+    "image-analysis",
+    "geocoding",
+    "heic",
+    "cli",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Security",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "pillow>=10.4.0",
+    "pillow-heif>=0.18.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+server = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.6",
+    "python-multipart>=0.0.9",
+]
+dev = [
+    "build>=1.0.0",
+    "twine>=5.0.0",
+    "pytest>=7.0.0",
+]
+
+[project.scripts]
+eagle = "eagle.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Shaivarth/eagle"
+Repository = "https://github.com/Shaivarth/eagle"
+Issues = "https://github.com/Shaivarth/eagle/issues"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/eagle",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["eagle"]

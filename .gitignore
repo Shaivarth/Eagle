@@ -6,17 +6,32 @@ frontend/dist-ssr/
 *.tsbuildinfo
 *.local
 
+# Python packaging & build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
 # Python virtualenv & cache
 .venv/
 backend/.venv/
+scratch/
 __pycache__/
-backend/app/__pycache__/
+*/__pycache__/
+*/*/__pycache__/
 *.pyc
 *.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Environment variables
+# Environment variables & secrets
 .env
+*.env
 frontend/.env
+.pypirc
 
 # IDE & OS files
 .DS_Store
