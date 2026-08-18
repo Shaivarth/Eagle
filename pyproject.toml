@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eagle-x"
-version = "1.0.0"
+version = "1.0.1"
 description = "Digital Forensics & EXIF/GPS Metadata Extraction CLI and Python Library"
 readme = "README.md"
 license = "MIT"

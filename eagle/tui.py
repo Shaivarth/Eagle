@@ -69,6 +69,7 @@ def render_startup_screen() -> str:
     lines.append(f"{p}╔{'═' * 60}╗{r}")
     lines.append(f"{p}{_box_line('EAGLE', 60)}{r}")
     lines.append(f"{p}{_box_line(f'IMAGE INTELLIGENCE & FORENSICS (v{__version__})', 60)}{r}")
+    lines.append(f"{p}{_box_line('github.com/shaivarth', 60)}{r}")
     lines.append(f"{p}╚{'═' * 60}╝{r}")
     lines.append("")
 
@@ -98,5 +99,6 @@ def render_analysis_header() -> str:
     lines.append(f"{p}╔{'═' * 60}╗{r}")
     lines.append(f"{p}{_box_line('EAGLE', 60)}{r}")
     lines.append(f"{p}{_box_line('IMAGE INTELLIGENCE & FORENSICS', 60)}{r}")
+    lines.append(f"{p}{_box_line('github.com/shaivarth', 60)}{r}")
     lines.append(f"{p}╚{'═' * 60}╝{r}")
     return "\n".join(lines)

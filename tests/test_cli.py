@@ -14,6 +14,7 @@ def test_cli_no_args_shows_startup_screen(capsys):
     captured = capsys.readouterr()
     assert "EAGLE" in captured.out
     assert "IMAGE INTELLIGENCE & FORENSICS" in captured.out
+    assert "github.com/shaivarth" in captured.out
     assert "COMMANDS & HUNTING ACTIONS:" in captured.out
     # Verify exact ASCII artwork signature elements
     assert "z$b" in captured.out
@@ -34,7 +35,7 @@ def test_cli_version(capsys):
         main(["--version"])
     assert exc_info.value.code == 0
     captured = capsys.readouterr()
-    assert "Eagle v1.0.0" in captured.out
+    assert "Eagle v1.0.1" in captured.out
 
 
 def test_cli_hunt_terminal_output(tmp_path: Path, capsys):
