@@ -105,7 +105,7 @@ Eagle supports deep header inspection across JPEG, PNG, HEIC/HEIF, TIFF, WebP, a
 <h3 align="center">Python Library Usage</h3>
 
 <p align="justify">
-You can integrate Eagle directly into your Python scripts and forensics pipelines without invoking the CLI:
+You can integrate Eagle directly into your Python scripts:
 </p>
 
 ```python
